@@ -1,0 +1,6 @@
+@WepAPiR_system_HostAddress = http://localhost:5234
+
+GET {{WepAPiR_system_HostAddress}}/Stories/
+Accept: application/json
+
+###

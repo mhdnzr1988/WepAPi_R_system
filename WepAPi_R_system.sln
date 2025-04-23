@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35219.272
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WepAPiR_system", "WepAPiR_system\WepAPiR_system.csproj", "{9928C486-186F-49F0-83DB-D7F3C019BBBB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9928C486-186F-49F0-83DB-D7F3C019BBBB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9928C486-186F-49F0-83DB-D7F3C019BBBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9928C486-186F-49F0-83DB-D7F3C019BBBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9928C486-186F-49F0-83DB-D7F3C019BBBB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {29E3D616-5B60-43E3-8A05-54139FC74927}
+	EndGlobalSection
+EndGlobal
