@@ -11,7 +11,7 @@ namespace WepAPiR_system.Controllers
     {
 
         private readonly IHackerNewsService _service;
-        public StoriesController(IHackerNewsService service)
+        public StoriesController(IHackerNewsService service) // inject DI
         {
             _service = service;
         }
