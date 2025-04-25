@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using WepAPiR_system.BusinessLogic;
 using WepAPiR_system.Services;
 
 namespace WepAPiR_system.Controllers
@@ -8,18 +9,18 @@ namespace WepAPiR_system.Controllers
     [ApiController]
     public class StoriesController : ControllerBase
     {
-        private readonly IHackerNewsService _service;
 
+        private readonly IHackerNewsService _service;
         public StoriesController(IHackerNewsService service)
         {
             _service = service;
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get(int page = 1, int pageSize = 20, string query = null)
-        
+        public async Task<IActionResult> Get(int page, int pageSize, string query = null)        
         {
-            var stories = await _service.GetNewestStoriesAsync(page, pageSize, query);
+            BAL_HackerNews obj_Hacker = new BAL_HackerNews(_service);
+            var stories = await obj_Hacker.GetNewestStoriesAsync(page, pageSize, query);
             return Ok(stories);
         }
     }
