@@ -1,4 +1,5 @@
 using WepAPiR_system.CommonUtility;
+using WepAPiR_system.Repository;
 using WepAPiR_system.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +21,8 @@ builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpClient();
 builder.Services.AddMemoryCache();
+// Register Repository and Service
+builder.Services.AddScoped<IHackerNewsRepository, HackerNewsRepository>();
 builder.Services.AddScoped<IHackerNewsService,HackerNewsService>();
 
 var app = builder.Build();

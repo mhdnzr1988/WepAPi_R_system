@@ -4,11 +4,13 @@ using Moq.Protected;
 using Newtonsoft.Json;
 using System.Net;
 using WepAPiR_system.Models;
+using WepAPiR_system.Repository;
 using WepAPiR_system.Services;
 using Xunit;
 
 namespace WepAPiR_system.Test
 {
+
     public class HackerNewsServiceTests
     {
         [Fact]
@@ -22,44 +24,20 @@ namespace WepAPiR_system.Test
             new Story { Id = 2, Title = "Another Post" }
         };
 
-            var handlerMock = new Mock<HttpMessageHandler>();
+            var repositoryMock = new Mock<IHackerNewsRepository>();
 
-            handlerMock.Protected()
-                .Setup<Task<HttpResponseMessage>>(
-                    "SendAsync",
-                    ItExpr.Is<HttpRequestMessage>(m => m.RequestUri!.ToString().Contains("newstories")),
-                    ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(new HttpResponseMessage
-                {
-                    StatusCode = HttpStatusCode.OK,
-                    Content = new StringContent(JsonConvert.SerializeObject(storyIds))
-                });
+            repositoryMock.Setup(r => r.GetNewStoryIdsAsync())
+                .ReturnsAsync(storyIds);
 
-            foreach (var story in stories)
-            {
-                handlerMock.Protected()
-                    .Setup<Task<HttpResponseMessage>>(
-                        "SendAsync",
-                        ItExpr.Is<HttpRequestMessage>(m => m.RequestUri!.ToString().Contains($"{story.Id}.json")),
-                        ItExpr.IsAny<CancellationToken>())
-                    .ReturnsAsync(new HttpResponseMessage
-                    {
-                        StatusCode = HttpStatusCode.OK,
-                        Content = new StringContent(JsonConvert.SerializeObject(story))
-                    });
-            }
+            repositoryMock.Setup(r => r.GetStoryByIdAsync(1))
+                .ReturnsAsync(stories[0]);
 
-            var httpClient = new HttpClient(handlerMock.Object);
+            repositoryMock.Setup(r => r.GetStoryByIdAsync(2))
+                .ReturnsAsync(stories[1]);
 
             var cache = new MemoryCache(new MemoryCacheOptions());
 
-            var configMock = new Mock<IConfiguration>();
-            configMock.Setup(c => c.GetConnectionString("NewStoriesUrl"))
-                      .Returns("https://hacker-news.firebaseio.com/v0/newstories.json");
-            configMock.Setup(c => c.GetConnectionString("storyUrl"))
-                      .Returns("https://hacker-news.firebaseio.com/v0/item");
-
-            var service = new HackerNewsService(httpClient, cache, configMock.Object);
+            var service = new HackerNewsService(repositoryMock.Object, cache);
 
             // Act
             var result = await service.GetNewestStoriesAsync(1, 2, "Hacker");
@@ -69,4 +47,5 @@ namespace WepAPiR_system.Test
             Assert.Contains(result, s => s.Title.Contains("Hacker"));
         }
     }
+
 }

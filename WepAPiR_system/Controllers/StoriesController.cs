@@ -19,8 +19,8 @@ namespace WepAPiR_system.Controllers
         [HttpGet]
         public async Task<IActionResult> Get(int page, int pageSize, string query = null)        
         {
-            BAL_HackerNews obj_Hacker = new BAL_HackerNews(_service);
-            var stories = await obj_Hacker.GetNewestStoriesAsync(page, pageSize, query);
+           // BAL_HackerNews obj_Hacker = new BAL_HackerNews(_service);
+            var stories = await _service.GetNewestStoriesAsync(page, pageSize, query); // Call the service method 
             return Ok(stories);
         }
     }

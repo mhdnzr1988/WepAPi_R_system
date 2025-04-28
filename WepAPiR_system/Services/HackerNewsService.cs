@@ -3,23 +3,21 @@ using Microsoft.Extensions.Caching.Memory;
 using Newtonsoft.Json;
 using WepAPiR_system.Models;
 using Microsoft.Extensions.Options;
+using WepAPiR_system.Repository;
 
 namespace WepAPiR_system.Services
 {
     public class HackerNewsService : IHackerNewsService
     {
-        private readonly HttpClient _httpClient;
+        private readonly IHackerNewsRepository _repository;
         private readonly IMemoryCache _cache;
-        private readonly string NewStoriesUrl = "";
-        private readonly string storyUrl = "";
 
-        public HackerNewsService(HttpClient httpClient, IMemoryCache cache, IConfiguration configuration)
+        public HackerNewsService(IHackerNewsRepository repository, IMemoryCache cache)
         {
-            _httpClient = httpClient;
+            _repository = repository;
             _cache = cache;
-            NewStoriesUrl = configuration.GetConnectionString("NewStoriesUrl"); // move URLs in app setting
-            storyUrl = configuration.GetConnectionString("storyUrl"); // move URLs in app setting
         }
+
         public async Task<IEnumerable<Story>> GetNewestStoriesAsync(int page, int pageSize, string query = null)
         {
             var cacheKey = $"newStories_{page}_{pageSize}_{query}";
@@ -28,9 +26,8 @@ namespace WepAPiR_system.Services
                 return cachedStories;
             }
 
-            var response = await _httpClient.GetStringAsync(NewStoriesUrl);
-            var storyIds = JsonConvert.DeserializeObject<List<int>>(response);
-
+            var storyIds = await _repository.GetNewStoryIdsAsync();
+            
             var pagedIds = storyIds
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize);
@@ -38,11 +35,9 @@ namespace WepAPiR_system.Services
             var stories = new List<Story>();
             foreach (var id in pagedIds)
             {
-                var storyUrl1 = storyUrl + id + ".json";
-                var storyJson = await _httpClient.GetStringAsync(storyUrl1);
-                var story = JsonConvert.DeserializeObject<Story>(storyJson);
-
-                if (story != null && story.Title != null && story.Url != null && (string.IsNullOrEmpty(query) || (story.Title?.Contains(query, StringComparison.OrdinalIgnoreCase) ?? false)))
+                var story = await _repository.GetStoryByIdAsync(id);
+                if (story != null && story.Title != null && story.Url != null &&
+                    (string.IsNullOrEmpty(query) || (story.Title?.Contains(query, StringComparison.OrdinalIgnoreCase) ?? false)))
                 {
                     stories.Add(story);
                 }
@@ -55,9 +50,6 @@ namespace WepAPiR_system.Services
 
             return stories;
         }
-
-
     }
-     
 
 }

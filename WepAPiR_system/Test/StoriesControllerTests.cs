@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Moq;
 using WepAPiR_system.Controllers;
-using WepAPiR_system.Models; // Adjust namespace if Story is elsewhere
-using WepAPiR_system.Services; // Adjust namespace for IHackerNewsService
+using WepAPiR_system.Models; 
+using WepAPiR_system.Services; 
 using Xunit;
 
 namespace WepAPiR_system.Tests
