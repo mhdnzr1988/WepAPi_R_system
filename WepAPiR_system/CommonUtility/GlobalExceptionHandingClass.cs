@@ -8,14 +8,15 @@ namespace WepAPiR_system.CommonUtility
 {
     public class GlobalExceptionHandingClass
     {
-        private readonly RequestDelegate _next;
-        private readonly ILogger<GlobalExceptionHandingClass> _logger;
-        public GlobalExceptionHandingClass(RequestDelegate next, ILogger<GlobalExceptionHandingClass> logger)
+        private readonly RequestDelegate _next; //next middleware component in the HTTP request pipeline
+        private readonly ILogger<GlobalExceptionHandingClass> _logger; //ogger used to log messages
+        public GlobalExceptionHandingClass(RequestDelegate next, ILogger<GlobalExceptionHandingClass> logger) //Dependancy injected by ASP.NET Core
         {
-            _next = next;
+            _next = next;   //
             _logger = logger;
         }
 
+        //This method is the entry point for middleware logic
         public async Task InvokeAsync(HttpContext context)
         {
             try
