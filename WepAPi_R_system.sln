@@ -5,6 +5,8 @@ VisualStudioVersion = 17.11.35219.272
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HACKERNEWSApi", "WepAPiR_system\HACKERNEWSApi.csproj", "{9928C486-186F-49F0-83DB-D7F3C019BBBB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HackerNews.Tests", "HackerNews.Tests\HackerNews.Tests.csproj", "{A797D3F9-D805-45F6-BFFA-3B29D8512E9C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{9928C486-186F-49F0-83DB-D7F3C019BBBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9928C486-186F-49F0-83DB-D7F3C019BBBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9928C486-186F-49F0-83DB-D7F3C019BBBB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A797D3F9-D805-45F6-BFFA-3B29D8512E9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A797D3F9-D805-45F6-BFFA-3B29D8512E9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A797D3F9-D805-45F6-BFFA-3B29D8512E9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A797D3F9-D805-45F6-BFFA-3B29D8512E9C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
