@@ -40,7 +40,7 @@ namespace HackerNews.Tests
                 .ReturnsAsync(new Story { Id = 3, Title = null, Url = "http://example.com" }); // Should be filtered out
 
             // Act
-            var result = await _service.GetNewestStoriesAsync(page: 1, pageSize: 10, query: "C#");
+            var result = await _service.GetNewestStoriesAsync(page: 1,query: "C#");
 
             // Assert
             var storyList = result.ToList();
@@ -52,17 +52,19 @@ namespace HackerNews.Tests
         public async Task GetNewestStoriesAsync_ReturnsFromCache_IfCached()
         {
             // Arrange
-            var cacheKey = "newStories_page1_size10_query_all";
+            var cacheKey = "newStories_page1_query_all";
             var cachedStories = new List<Story>
             {
                 new Story { Id = 99, Title = "Cached Story", Url = "http://example.com" }
             };
+            
 
             // Pre-populate cache
             _memoryCache.Set(cacheKey, cachedStories, TimeSpan.FromMinutes(5));
 
             // Act
-            var result = await _service.GetNewestStoriesAsync(page: 1, pageSize: 10, query: null);
+            var result = await _service.GetNewestStoriesAsync(page: 1,  query: null);
+
 
             // Assert
             var storyList = result.ToList();
@@ -70,6 +72,7 @@ namespace HackerNews.Tests
             Assert.Equal("Cached Story", storyList[0].Title);
 
             // Ensure repository was never called
+            
             _repositoryMock.Verify(r => r.GetNewStoryIdsAsync(), Times.Never);
         }
     }

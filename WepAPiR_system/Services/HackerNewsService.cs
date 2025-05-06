@@ -5,6 +5,7 @@ using WepAPiR_system.Models;
 using Microsoft.Extensions.Options;
 using WepAPiR_system.Repository;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Net.Http;
 
 namespace WepAPiR_system.Services
 {
@@ -18,13 +19,14 @@ namespace WepAPiR_system.Services
             _repository = repository;
             _cache = cache;
         }
+       
 
-        public async Task<IEnumerable<Story>> GetNewestStoriesAsync(int page, int pageSize, string query = null)
+        public async Task<IEnumerable<Story>> GetNewestStoriesAsync(int page, string query = null)
         {
 
             var normalizedQuery = string.IsNullOrWhiteSpace(query)? "all" : query.Trim().ToLowerInvariant();//If the query is empty or whitespace, set it to "all"; otherwise, normalize it (trim and lowercase) for consistent cache key formatting
 
-            var cacheKey = $"newStories_page{page}_size{pageSize}_query_{normalizedQuery}"; //unique cache key based on the page, page size, and search query so results can be reused 
+            var cacheKey = $"newStories_page{page}_query_{normalizedQuery}"; //unique cache key based on the page, page size, and search query so results can be reused 
 
 
             //Check if the results for this key are already cached.
@@ -33,13 +35,12 @@ namespace WepAPiR_system.Services
                 return cachedStories; //return the cached list immediately
             }
 
-            var storyIds = await _repository.GetNewStoryIdsAsync(); //Fetch a list of IDs for the newest stories from the repository.
-
-            //var pagedIds = storyIds .Skip((page - 1) * pageSize) .Take(pageSize); // remove pagination from api
-
+            var storyIds = await _repository.GetNewStoryIdsAsync() ?? new List<int>(); ; //Fetch a list of IDs for the newest stories from the repository.
+            var top200StoryIds = storyIds.Take(200).ToList(); // Fetch only top 200 records.
+            
             var stories = new List<Story>();
             //fetch the full story object asynchronously
-            foreach (var id in storyIds)
+            foreach (var id in top200StoryIds)
             {
                 var story = await _repository.GetStoryByIdAsync(id);
                 if (story != null && story.Title != null && story.Url != null &&

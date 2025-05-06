@@ -30,11 +30,11 @@ namespace HackerNews.Tests
                 new Story { Id = 2, Title = "Test Story 2", Url = "http://example.com/2" }
             };
 
-            _serviceMock.Setup(s => s.GetNewestStoriesAsync(1, 5, null))
+            _serviceMock.Setup(s => s.GetNewestStoriesAsync(1,  null))
                         .ReturnsAsync(expectedStories);
 
             // Act
-            var result = await _controller.Get(1, 5);
+            var result = await _controller.Get(1, null);
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);
@@ -46,11 +46,11 @@ namespace HackerNews.Tests
         public async Task Get_ReturnsOkResult_EvenIfEmpty()
         {
             // Arrange
-            _serviceMock.Setup(s => s.GetNewestStoriesAsync(1, 5, null))
+            _serviceMock.Setup(s => s.GetNewestStoriesAsync(1, null))
                         .ReturnsAsync(new List<Story>());
 
             // Act
-            var result = await _controller.Get(1, 5);
+            var result = await _controller.Get(1, null);
 
             // Assert
             var okResult = Assert.IsType<OkObjectResult>(result);

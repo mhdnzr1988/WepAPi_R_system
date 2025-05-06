@@ -16,9 +16,9 @@ namespace WepAPiR_system.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get(int page, int pageSize, string query = null)        
+        public async Task<IActionResult> Get(int page, string query = null)        
         {
-            var stories = await _service.GetNewestStoriesAsync(page, pageSize, query); // Call the service method 
+            var stories = await _service.GetNewestStoriesAsync(page, query); // Call the service method 
             return Ok(stories);
         }
     }
