@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Configuration;
 using Moq;
 using WepAPiR_system.Models;
 using WepAPiR_system.Repository;
@@ -11,6 +12,7 @@ namespace HackerNews.Tests
         private readonly Mock<IHackerNewsRepository> _repositoryMock;
         private readonly IMemoryCache _memoryCache;
         private readonly HackerNewsService _service;
+        private readonly IConfiguration _configuration;
 
         public HackerNewsServiceTests()
         {
@@ -20,7 +22,7 @@ namespace HackerNews.Tests
             var memoryCacheOptions = new MemoryCacheOptions();
             _memoryCache = new MemoryCache(memoryCacheOptions);
 
-            _service = new HackerNewsService(_repositoryMock.Object, _memoryCache);
+            _service = new HackerNewsService(_repositoryMock.Object, _memoryCache,_configuration);
         }
         [Fact]
         public async Task GetNewestStoriesAsync_ReturnsFilteredStories_WhenNotCached()

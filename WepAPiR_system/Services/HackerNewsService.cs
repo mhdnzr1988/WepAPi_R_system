@@ -1,11 +1,6 @@
-﻿using Castle.Components.DictionaryAdapter.Xml;
-using Microsoft.Extensions.Caching.Memory;
-using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Caching.Memory;
 using WepAPiR_system.Models;
-using Microsoft.Extensions.Options;
 using WepAPiR_system.Repository;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Net.Http;
 
 namespace WepAPiR_system.Services
 {
@@ -13,11 +8,15 @@ namespace WepAPiR_system.Services
     {
         private readonly IHackerNewsRepository _repository;
         private readonly IMemoryCache _cache;
+        private readonly IConfiguration _configuration;
+        private readonly int Count200Stories;
 
-        public HackerNewsService(IHackerNewsRepository repository, IMemoryCache cache)
+        public HackerNewsService(IHackerNewsRepository repository, IMemoryCache cache, IConfiguration configuration)
         {
             _repository = repository;
             _cache = cache;
+            _configuration= configuration;
+            Count200Stories = Convert.ToInt16(_configuration.GetConnectionString("Top200Stories"));
         }
        
 
@@ -36,23 +35,23 @@ namespace WepAPiR_system.Services
             }
 
             var storyIds = await _repository.GetNewStoryIdsAsync() ?? new List<int>(); ; //Fetch a list of IDs for the newest stories from the repository.
-            var top200StoryIds = storyIds.Take(200).ToList(); // Fetch only top 200 records.
-            
+            var tasks = storyIds.Select(id => _repository.GetStoryByIdAsync(id));
+            var allStories = await Task.WhenAll(tasks);
+
+            // Apply filters and take up to Count200Stories
             var stories = new List<Story>();
-            //fetch the full story object asynchronously
-            foreach (var id in top200StoryIds)
-            {
-                var story = await _repository.GetStoryByIdAsync(id);
-                if (story != null && story.Title != null && story.Url != null &&
-                    (string.IsNullOrEmpty(query) || (story.Title?.Contains(query, StringComparison.OrdinalIgnoreCase) ?? false))) //Filter data as title and url is not null
-                {
-                    stories.Add(story); // insert all story in stories list
-                }
-            }
+             stories = allStories
+                .Where(story => story != null &&
+                                !string.IsNullOrEmpty(story.Title) &&
+                                !string.IsNullOrEmpty(story.Url) &&
+                                (string.IsNullOrEmpty(query) || story.Title.Contains(query, StringComparison.OrdinalIgnoreCase))) //Filter data as title and url is not null
+                .Take(Count200Stories) // Fetch only top 200 records.
+                .ToList();
 
             var cacheEntryOptions = new MemoryCacheEntryOptions()
                 .SetAbsoluteExpiration(TimeSpan.FromMinutes(5)); //Cache the filtered list of stories for 5 minutes using the earlier-generated cache key
             _cache.Set(cacheKey, stories, cacheEntryOptions);
+
             return stories;//Return the list of stories.
         }
     }

@@ -1,20 +1,14 @@
-﻿using System.Collections.Generic;
-using System.Net;
-using System.Net.Http;
-using System.Threading;
-using System.Threading.Tasks;
-using WepAPiR_system.Models;
-using WepAPiR_system.Repository;
-using WepAPiR_system.Services;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Moq;
 using Moq.Protected;
 using Newtonsoft.Json;
-//using Xunit;
+using System.Net;
+using WepAPiR_system.Models;
+using WepAPiR_system.Repository;
 
 namespace HackerNews.Tests
 {
-    
+
 
     public class HackerNewsRepositoryTests
     {

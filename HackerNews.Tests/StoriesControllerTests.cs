@@ -1,8 +1,5 @@
-﻿using Xunit;
+﻿using Microsoft.AspNetCore.Mvc;
 using Moq;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using WepAPiR_system.Controllers;
 using WepAPiR_system.Models;
 using WepAPiR_system.Services;
